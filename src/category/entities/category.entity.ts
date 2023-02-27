@@ -6,6 +6,7 @@ import {
   JoinColumn,
   Index,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 import { Account } from 'src/account/entities/account.entity';
 import { Photo } from 'src/photo/entities/photo.entity';
@@ -37,4 +38,7 @@ export class Category extends AbstractEntity {
 
   @Column({ type: 'boolean', default: false })
   posted = false;
+
+  @ManyToOne(() => Photo)
+  cover: Photo;
 }

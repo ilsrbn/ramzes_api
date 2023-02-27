@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { PostService } from '../post/post.service';
 import * as dotenv from 'dotenv';
 import { unlink } from 'node:fs';
+import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 
 dotenv.config();
 
@@ -28,16 +29,27 @@ export class PhotoService {
     await this.photoRepository.save(photo);
   }
 
-  findAll() {
-    return this.photoRepository.find({ where: {} });
+  findAll(query: PaginateQuery, posted?: boolean): Promise<Paginated<Photo>> {
+    return paginate(query, this.photoRepository, {
+      defaultSortBy: [['id', 'DESC']],
+      sortableColumns: ['id', 'updated_at', 'created_at'],
+      where: {
+        posted,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return this.photoRepository.findOne({ where: { id } });
+  findOne(id: number, posted?: boolean) {
+    return this.photoRepository.findOne({ where: { id, posted } });
   }
+  async toggle(id: number) {
+    const photo = await this.photoRepository.findOneOrFail({
+      where: { id },
+    });
 
-  update(id: number, updatePhotoDto: UpdatePhotoDto) {
-    return `This action updates a #${id} photo`;
+    photo.posted = !photo.posted;
+
+    return await this.photoRepository.save(photo);
   }
 
   async remove(id: number) {

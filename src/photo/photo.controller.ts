@@ -9,10 +9,25 @@ import {
   Get,
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiExtraModels,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SharpPipe } from '../../utils/sharp.pipe';
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { Photo } from './entities/photo.entity';
+import {
+  paginatedSchema,
+  PaginateQueryOptions,
+} from '../../utils/paginated.schema';
 
 @ApiTags('Admin Photo')
 @Controller('admin/photo')
@@ -26,14 +41,43 @@ export class AdminPhotoController {
     schema: AdminPhotoController.schema,
   })
   @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Create optimized .webp photo' })
   create(@UploadedFile(SharpPipe) file: string) {
     return this.photoService.create(file);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete photo by ID' })
   remove(@Param('id') id: string) {
     return this.photoService.remove(+id);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiExtraModels(Photo)
+  // @ApiResponse({
+  //   status: 200,
+  //   schema: { ...paginatedSchema(Photo) },
+  // })
+  @PaginateQueryOptions(Photo)
+  @ApiOperation({ summary: 'Get all photos' })
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Photo>> {
+    return this.photoService.findAll(query);
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get photo by ID' })
+  findOne(@Param('id') id: string) {
+    return this.photoService.findOne(+id);
+  }
+
+  @Post(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Toggle photo publication status' })
+  toggleStatus(@Param('id') id: string) {
+    return this.photoService.toggle(+id);
   }
 
   private static schema = {
@@ -46,19 +90,26 @@ export class AdminPhotoController {
     },
   };
 }
-
 @ApiTags('Photo')
 @Controller('photo')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
   @Get()
-  findAll() {
-    return this.photoService.findAll();
+  @ApiResponse({
+    status: 200,
+    schema: { ...paginatedSchema(Photo) },
+    description: 'Returns paginated photos',
+  })
+  @ApiOperation({ summary: 'Get all posted photos' })
+  @PaginateQueryOptions(Photo)
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Photo>> {
+    return this.photoService.findAll(query, true);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get posted photo by ID' })
   findOne(@Param('id') id: string) {
-    return this.photoService.findOne(+id);
+    return this.photoService.findOne(+id, true);
   }
 }

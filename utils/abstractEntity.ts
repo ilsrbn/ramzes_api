@@ -3,8 +3,6 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
-  BaseEntity,
-  Entity,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
