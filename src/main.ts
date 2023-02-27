@@ -6,7 +6,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
 async function bootstrap() {
-const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     origin: [
       'https://dashboard.ramzes.serbin.co',
@@ -25,7 +25,7 @@ const app = await NestFactory.create<NestExpressApplication>(AppModule);
     .setTitle('Ramzes API')
     .setVersion('1')
     .addBearerAuth()
-    .addServer('http://localhost:3000')
+    .addServer('http://localhost:3005')
     .addServer('https://api.ramzes.serbin.co')
     .build();
   const document = SwaggerModule.createDocument(app, config);

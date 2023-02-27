@@ -6,17 +6,20 @@ import { AccountModule } from './account/account.module';
 import { PostModule } from './post/post.module';
 import { PhotoModule } from './photo/photo.module';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
+import { memoryStorage } from 'multer';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
     MulterModule.register({
-      dest: './public',
+      storage: memoryStorage(),
     }),
     AccountModule,
     PostModule,
     PhotoModule,
     CategoryModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

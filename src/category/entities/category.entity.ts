@@ -1,17 +1,16 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
   OneToMany,
   JoinColumn,
   Index,
+  ManyToMany,
 } from 'typeorm';
 import { Account } from 'src/account/entities/account.entity';
-import { Attachment } from 'src/photo/entities/photo.entity';
+import { Photo } from 'src/photo/entities/photo.entity';
 import { AbstractEntity } from 'utils/abstractEntity';
+import { JoinTable } from 'typeorm';
 
 @Entity()
 export class Category extends AbstractEntity {
@@ -29,12 +28,12 @@ export class Category extends AbstractEntity {
   @Column({ nullable: false })
   ownerId: number;
 
-  @OneToMany(() => Attachment, (attachment) => attachment.post, {
+  @ManyToMany(() => Photo, (photo) => photo.categories, {
     cascade: ['remove'],
     eager: true,
   })
-  @JoinColumn()
-  photos: Attachment[];
+  @JoinTable()
+  photos: Photo[];
 
   @Column({ type: 'boolean', default: false })
   posted = false;

@@ -11,11 +11,17 @@ import {
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiOkResponse,
+  OmitType,
+} from '@nestjs/swagger';
 import { User } from 'utils/request.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { orderBy } from 'lodash';
 
 @ApiTags('Admin Post')
 @ApiBearerAuth()
@@ -41,11 +47,17 @@ export class AdminPostController {
     return this.postService.edit(+id, { ...editPostDto, userId });
   }
 
-  @ApiOperation({ summary: 'Get all posts' })
+  @Get()
   @UseGuards(JwtAuthGuard)
-  @Get('?')
-  findAll(@Query('search') search: string) {
-    return this.postService.findAll(search, 'id');
+  @ApiOperation({ summary: 'Get all posts' })
+  @ApiQuery({
+    name: 'search',
+    type: String,
+    description: 'Search by post title and content',
+    required: false,
+  })
+  findAll(@Query('search') search?: string) {
+    return this.postService.findAll('id', search);
   }
 
   @ApiOperation({ summary: 'Get post by ID' })
@@ -68,10 +80,16 @@ export class AdminPostController {
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @ApiOperation({ summary: 'Get all posts' })
   @Get()
-  findAll(@Query('search') search: string) {
-    return this.postService.findAll(search, 'event_date');
+  @ApiOperation({ summary: 'Get all posts' })
+  @ApiQuery({
+    name: 'search',
+    type: String,
+    description: 'Search by post title and content',
+    required: false,
+  })
+  findAll(@Query('search') search?: string) {
+    return this.postService.findAll('event_date', search);
   }
 
   @ApiOperation({ summary: 'Get post by ID' })
