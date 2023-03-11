@@ -10,6 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'https://dashboard.ramzes.serbin.co',
+      'https://dashboard.ramzes.serbin.co',
       'https://ramzes.serbin.co',
       'http://localhost:3000',
       'http://localhost:3111',

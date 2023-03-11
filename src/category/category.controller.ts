@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards} from '@nestjs/common';
 import { CategoryService } from './category.service';
-import {ApiExtraModels, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiExtraModels, ApiOperation, ApiTags} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AttachPhotosDto } from './dto/attach-photos.dto';
 import {CreateCategoryDto} from './dto/create-category.dto';
@@ -25,6 +25,7 @@ export class CategoryController {
 }
 
 @ApiTags('Admin Category')
+@ApiBearerAuth()
 @Controller('admin/category')
 export class AdminCategoryController {
   constructor(private readonly categoryService: CategoryService) {}

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiExtraModels,
@@ -30,6 +31,7 @@ import {
 } from '../../utils/paginated.schema';
 
 @ApiTags('Admin Photo')
+@ApiBearerAuth()
 @Controller('admin/photo')
 export class AdminPhotoController {
   constructor(private readonly photoService: PhotoService) {}
