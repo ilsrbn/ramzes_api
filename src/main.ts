@@ -26,11 +26,11 @@ async function bootstrap() {
     .setTitle('Ramzes API')
     .setVersion('1')
     .addBearerAuth()
+    .addServer('https://back.ramzes.serbin.co')
     .addServer('http://localhost:3005')
-    .addServer('https://api.ramzes.serbin.co')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/documentation', app, document);
-  await app.listen(3005);
+  await app.listen(3006);
 }
 bootstrap();
