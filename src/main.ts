@@ -17,6 +17,7 @@ async function bootstrap() {
       'http://localhost:4200',
     ],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
+    preflightContinue: true,
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(join(__dirname, '../..', 'public'), {
