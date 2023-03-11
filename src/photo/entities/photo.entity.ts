@@ -10,9 +10,8 @@ export class Photo extends AbstractEntity {
   @Column()
   file: string;
 
-  @ManyToMany(() => Category)
+  @ManyToMany(() => Category, (category) => category.photos, {
+    onDelete: "CASCADE"
+  })
   categories: Array<Category>;
-
-  @Column({ type: 'boolean', default: false })
-  posted = false;
 }

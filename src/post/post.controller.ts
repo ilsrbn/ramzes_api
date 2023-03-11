@@ -16,18 +16,24 @@ import {
   ApiTags,
   ApiBearerAuth,
   ApiQuery,
-  ApiOkResponse,
-  OmitType,
 } from '@nestjs/swagger';
 import { User } from 'utils/request.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Post as PostEntity } from './entities/post.entity'
 
 @ApiTags('Admin Post')
 @ApiBearerAuth()
 @Controller('admin/post')
 export class AdminPostController {
   constructor(private readonly postService: PostService) {}
+
+  @ApiOperation({ summary: "Toggle post visibility" })
+  @UseGuards(JwtAuthGuard)
+  @Post('toggle/:id')
+  toggleVisibility(@Param('id') id: string) {
+    return this.postService.toggleVisibility(+id)
+  }
 
   @ApiOperation({ summary: 'Create post' })
   @UseGuards(JwtAuthGuard)
@@ -63,7 +69,7 @@ export class AdminPostController {
   @ApiOperation({ summary: 'Get post by ID' })
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<PostEntity> {
     return this.postService.findOne(+id);
   }
 

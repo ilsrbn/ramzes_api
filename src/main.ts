@@ -13,8 +13,9 @@ async function bootstrap() {
       'https://ramzes.serbin.co',
       'http://localhost:3000',
       'http://localhost:3111',
+      'http://localhost:4200',
     ],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(join(__dirname, '../..', 'public'), {

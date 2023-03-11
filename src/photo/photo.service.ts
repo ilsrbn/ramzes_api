@@ -27,37 +27,29 @@ export class PhotoService {
       file_url: PhotoService.domainUrl + PhotoService.filePathPrefix + fileName,
     });
     await this.photoRepository.save(photo);
+    return { ...photo, url: photo.file_url };
   }
 
-  findAll(query: PaginateQuery, posted?: boolean): Promise<Paginated<Photo>> {
+  findAll(query: PaginateQuery): Promise<Paginated<Photo>> {
     return paginate(query, this.photoRepository, {
       defaultSortBy: [['id', 'DESC']],
       sortableColumns: ['id', 'updated_at', 'created_at'],
-      where: {
-        posted,
-      },
+      relations: { categories: true },
     });
   }
 
-  findOne(id: number, posted?: boolean) {
-    return this.photoRepository.findOne({ where: { id, posted } });
-  }
-  async toggle(id: number) {
-    const photo = await this.photoRepository.findOneOrFail({
-      where: { id },
-    });
-
-    photo.posted = !photo.posted;
-
-    return await this.photoRepository.save(photo);
+  findOne(id: number) {
+    return this.photoRepository.findOne({ where: { id } });
   }
 
   async remove(id: number) {
     const file = await this.photoRepository.findOneOrFail({
       where: { id },
     });
-    unlink(file.file, (err) => {
-      if (err) throw err;
+    unlink('.' + file.file, (err) => {
+      if (err){
+        console.log({ err })
+      }
       console.log(`${file.file} was deleted`);
     });
     return await this.photoRepository.delete({ id });

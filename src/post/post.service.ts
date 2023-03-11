@@ -54,8 +54,8 @@ export class PostService {
     return posts;
   }
 
-  findOne(id: number, posted?: boolean): Promise<Post | null> {
-    return this.postRepository.findOne({
+  findOne(id: number, posted?: boolean): Promise<Post> {
+    return this.postRepository.findOneOrFail({
       where: {
         id,
         posted,
@@ -67,5 +67,17 @@ export class PostService {
     return this.postRepository.delete({
       id,
     });
+  }
+
+  async toggleVisibility(postId: number) {
+    const post = await this.postRepository.findOneOrFail({
+      where: {
+        id: postId
+      }
+    })
+
+    post.posted = !post.posted
+
+    return await this.postRepository.save(post)
   }
 }

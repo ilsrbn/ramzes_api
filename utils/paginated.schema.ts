@@ -3,7 +3,7 @@ import {
   ApiExtraModels,
   ApiOkResponse,
   ApiProperty,
-  ApiQuery,
+  ApiQuery, ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
 
@@ -92,33 +92,31 @@ class PaginatedResponseLinksDto {
   last?: string;
 }
 
-class PaginatedResponseDto<T> {
-  data: T[];
-  @ApiProperty()
-  meta: PaginatedResponseMetaDto;
-  @ApiProperty()
-  links: PaginatedResponseLinksDto;
-}
-
-export function PaginateQueryOptions<DataDto extends Type<unknown>>(
+export function PaginateQueryOptions<DataDto extends Function>(
   dataDto: DataDto,
   ...filterFields: string[]
 ) {
   return applyDecorators(
-    ApiExtraModels(PaginatedResponseDto, dataDto),
-    ApiOkResponse({
+    ApiExtraModels(PaginatedResponseLinksDto, PaginatedResponseMetaDto, dataDto),
+    ApiResponse({
+      status: 200,
       schema: {
-        allOf: [
-          { $ref: getSchemaPath(PaginatedResponseDto) },
-          {
-            properties: {
-              data: {
-                type: 'array',
-                items: { $ref: getSchemaPath(dataDto) },
-              },
-            },
+        type: 'object',
+        // $ref: getSchemaPath(PaginatedResponseDto<DataDto>)
+        // type: 'object',
+        properties: {
+          // $ref: getSchemaPath(PaginatedResponseDto),
+          links: {
+            $ref: getSchemaPath(PaginatedResponseLinksDto)
           },
-        ],
+          meta: {
+            $ref: getSchemaPath(PaginatedResponseMetaDto)
+          },
+          data: {
+            type: 'array',
+            items: { $ref: getSchemaPath(dataDto) },
+          },
+        }
       },
     }),
     ApiQuery({

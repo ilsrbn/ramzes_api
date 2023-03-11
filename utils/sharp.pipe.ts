@@ -11,6 +11,7 @@ export class SharpPipe
     const filename = Date.now() + '-' + originalName + '.webp';
 
     await sharp(image.buffer)
+      .rotate()
       .resize(800)
       .webp({ effort: 3 })
       .toFile(path.join('public', filename));

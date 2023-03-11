@@ -73,12 +73,6 @@ export class AdminPhotoController {
     return this.photoService.findOne(+id);
   }
 
-  @Post(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Toggle photo publication status' })
-  toggleStatus(@Param('id') id: string) {
-    return this.photoService.toggle(+id);
-  }
 
   private static schema = {
     type: 'object',
@@ -104,12 +98,12 @@ export class PhotoController {
   @ApiOperation({ summary: 'Get all posted photos' })
   @PaginateQueryOptions(Photo)
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Photo>> {
-    return this.photoService.findAll(query, true);
+    return this.photoService.findAll(query);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get posted photo by ID' })
   findOne(@Param('id') id: string) {
-    return this.photoService.findOne(+id, true);
+    return this.photoService.findOne(+id);
   }
 }

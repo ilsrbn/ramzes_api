@@ -30,8 +30,8 @@ export class Category extends AbstractEntity {
   ownerId: number;
 
   @ManyToMany(() => Photo, (photo) => photo.categories, {
-    cascade: ['remove'],
     eager: true,
+    onDelete: "CASCADE"
   })
   @JoinTable()
   photos: Photo[];
@@ -39,6 +39,9 @@ export class Category extends AbstractEntity {
   @Column({ type: 'boolean', default: false })
   posted = false;
 
-  @ManyToOne(() => Photo)
+  @ManyToOne(() => Photo, {
+    eager: true,
+    onDelete: 'SET NULL'
+  })
   cover: Photo;
 }
