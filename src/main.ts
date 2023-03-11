@@ -9,12 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     origin: [
-      'https://dashboard.ramzes.serbin.co',
+      'https://dashboard.ramzes.serbin.co/',
+      'https://dashboard.ramzes.serbin.co/',
       'https://ramzes.serbin.co',
       'http://localhost:4200',
     ],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
-    preflightContinue: true,
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(join(__dirname, '../..', 'public'), {
