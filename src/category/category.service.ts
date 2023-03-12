@@ -46,6 +46,19 @@ export class CategoryService {
     });
   }
 
+  findAllPosted(query: PaginateQuery): Promise<Paginated<Category>> {
+    return paginate(query, this.categoryRepository, {
+      defaultSortBy: [['id', 'DESC']],
+      sortableColumns: ['id', 'updated_at', 'created_at'],
+      relations: {
+        cover: true,
+      },
+      where: {
+        posted: true
+      }
+    });
+  }
+
   async findOne(id: number) {
     return await this.categoryRepository.findOneOrFail({ where: { id } });
   }

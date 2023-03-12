@@ -20,7 +20,7 @@ export class CategoryController {
   @PaginateQueryOptions(Category)
   @ApiOperation({ summary: 'Get all posted categories' })
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Category>> {
-    return this.categoryService.findAll(query);
+    return this.categoryService.findAllPosted(query);
   }
 }
 

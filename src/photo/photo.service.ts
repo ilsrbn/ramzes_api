@@ -45,8 +45,7 @@ export class PhotoService {
         'photos.categories',
         'category',
         'category.posted = :posted',
-        { posted: true }
-      )
+        { posted: true })
     return paginate<Photo>(query, queryBuilder, {
       defaultSortBy: [['id', 'DESC']],
       sortableColumns: ['id', 'updated_at', 'created_at'],
