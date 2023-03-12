@@ -13,6 +13,7 @@ async function bootstrap() {
       'https://dashboard.ramzes.serbin.co',
       'https://ramzes.serbin.co',
       'http://localhost:4200',
+      'http://localhost:3000'
     ],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
   });
