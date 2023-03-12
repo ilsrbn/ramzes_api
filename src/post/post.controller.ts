@@ -65,7 +65,7 @@ export class AdminPostController {
   //   schema: { ...paginatedSchema(Photo) },
   // })
   @PaginateQueryOptions(PostEntity)
-  @ApiOperation({ summary: 'Get all photos' })
+  @ApiOperation({ summary: 'Get all posts' })
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<PostEntity>> {
     return this.postService.findAll(query);
   }
@@ -97,7 +97,7 @@ export class PostController {
   //   schema: { ...paginatedSchema(Photo) },
   // })
   @PaginateQueryOptions(PostEntity)
-  @ApiOperation({ summary: 'Get all photos' })
+  @ApiOperation({ summary: 'Get all posts' })
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<PostEntity>> {
     return this.postService.findAll(query);
   }
