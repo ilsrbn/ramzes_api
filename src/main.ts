@@ -27,7 +27,7 @@ async function bootstrap() {
     .setVersion('1')
     .addBearerAuth()
     .addServer('https://back.ramzes.serbin.co')
-    .addServer('http://localhost:3005')
+    .addServer('http://localhost:3006')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/documentation', app, document);

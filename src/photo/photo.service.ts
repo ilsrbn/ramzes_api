@@ -38,6 +38,22 @@ export class PhotoService {
     });
   }
 
+  findAllPosted(query: PaginateQuery): Promise<Paginated<Photo>> {
+    const queryBuilder = this.photoRepository
+      .createQueryBuilder('photos')
+      .innerJoinAndSelect(
+        'photos.categories',
+        'category',
+        'category.posted = :posted',
+        { posted: true }
+      )
+    return paginate<Photo>(query, queryBuilder, {
+      defaultSortBy: [['id', 'DESC']],
+      sortableColumns: ['id', 'updated_at', 'created_at'],
+      relations: { categories: true },
+    });
+  }
+
   findOne(id: number) {
     return this.photoRepository.findOne({ where: { id } });
   }

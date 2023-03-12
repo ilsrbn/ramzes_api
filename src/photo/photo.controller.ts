@@ -100,7 +100,7 @@ export class PhotoController {
   @ApiOperation({ summary: 'Get all posted photos' })
   @PaginateQueryOptions(Photo)
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Photo>> {
-    return this.photoService.findAll(query);
+    return this.photoService.findAllPosted(query);
   }
 
   @Get(':id')
