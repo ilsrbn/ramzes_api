@@ -12,11 +12,11 @@ import { User } from '../../utils/request.decorators';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Register profile' })
-  @Post('register')
-  register(@Body() createAccountDto: CreateAccountDto) {
-    return this.authService.register(createAccountDto);
-  }
+  // @ApiOperation({ summary: 'Register profile' })
+  // @Post('register')
+  // register(@Body() createAccountDto: CreateAccountDto) {
+  //   return this.authService.register(createAccountDto);
+  // }
 
   @ApiOperation({ summary: 'login' })
   @Post('login')
