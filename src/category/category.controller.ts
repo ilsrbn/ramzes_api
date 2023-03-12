@@ -22,6 +22,14 @@ export class CategoryController {
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Category>> {
     return this.categoryService.findAllPosted(query);
   }
+
+  @Get(':id')
+  @ApiExtraModels(Category)
+  @PaginateQueryOptions(Category)
+  @ApiOperation({ summary: 'Get posted category by ID' })
+  findOne(@Param('id') id: string): Promise<Category> {
+    return this.categoryService.findOne(+id, true);
+  }
 }
 
 @ApiTags('Admin Category')

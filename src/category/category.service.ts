@@ -7,7 +7,12 @@ import { PhotoService } from '../photo/photo.service';
 import {CreateCategoryDto} from './dto/create-category.dto';
 import {EditCategoryDto} from './dto/edit-category.dto';
 import {paginate, Paginated, PaginateQuery} from 'nestjs-paginate';
-
+interface CategoryPostedFilter {
+  where: {
+    id: number
+    posted?: boolean
+  }
+}
 @Injectable()
 export class CategoryService {
   constructor(
@@ -59,8 +64,12 @@ export class CategoryService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.categoryRepository.findOneOrFail({ where: { id } });
+  async findOne(id: number, posted?: boolean) {
+    const findOptions: CategoryPostedFilter = {
+      where: { id }
+    }
+    if (posted !== undefined) findOptions.where.posted = posted
+    return await this.categoryRepository.findOneOrFail(findOptions);
   }
 
   async setPhotos(categoryId: number, photosIds: number[]) {
