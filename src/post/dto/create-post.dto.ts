@@ -10,6 +10,9 @@ export class CreatePostDto {
   @IsBoolean()
   @IsOptional()
   posted?: boolean;
+
+  @IsOptional()
+  featured_photos: Array<string>
 }
 
 export interface CreatePost extends CreatePostDto {

@@ -23,4 +23,7 @@ export class Post extends AbstractEntity {
 
   @Column({ nullable: false })
   ownerId: number;
+
+  @Column({ type: 'json', nullable: true})
+  featured_photos: Array<string>
 }

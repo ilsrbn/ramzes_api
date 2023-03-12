@@ -36,6 +36,7 @@ export class PostService {
     if (editPost.title) post.title = editPost.title;
     if (editPost.posted) post.posted = editPost.posted;
     if (editPost.content) post.content = editPost.content;
+    if (editPost.featured_photos) post.featured_photos = editPost.featured_photos
 
     await this.postRepository.save(post);
     return post;
