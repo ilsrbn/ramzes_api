@@ -5,6 +5,8 @@ import { CreatePost } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { EditPost } from './dto/update-post.dto';
 import { isEmpty } from 'lodash';
+import {paginate, Paginated, PaginateQuery} from 'nestjs-paginate';
+import {Photo} from '../photo/entities/photo.entity';
 
 @Injectable()
 export class PostService {
@@ -38,20 +40,11 @@ export class PostService {
     await this.postRepository.save(post);
     return post;
   }
-  async findAll(orderBy: string, search?: string): Promise<Post[]> {
-    let posts;
-    if (!isEmpty(search)) {
-      posts = await this.postRepository
-        .createQueryBuilder('post')
-        .select()
-        .where(`MATCH(title) AGAINST ('+${search}*' IN BOOLEAN MODE)`)
-        .orWhere(`MATCH(content) AGAINST ('+${search}*' IN BOOLEAN MODE)`)
-        .leftJoinAndSelect('post.attachments', 'attachments')
-        .orderBy(orderBy, 'DESC')
-        .getMany();
-    } else
-      posts = await this.postRepository.find({ order: { [orderBy]: 'DESC' } });
-    return posts;
+  findAll(query: PaginateQuery): Promise<Paginated<Post>> {
+    return paginate(query, this.postRepository, {
+      defaultSortBy: [['id', 'DESC']],
+      sortableColumns: ['id', 'updated_at', 'created_at'],
+    });
   }
 
   findOne(id: number, posted?: boolean): Promise<Post> {

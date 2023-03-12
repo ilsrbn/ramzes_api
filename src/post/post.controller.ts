@@ -15,12 +15,16 @@ import {
   ApiOperation,
   ApiTags,
   ApiBearerAuth,
-  ApiQuery,
+  ApiQuery, ApiExtraModels,
 } from '@nestjs/swagger';
 import { User } from 'utils/request.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post as PostEntity } from './entities/post.entity'
+import {Photo} from '../photo/entities/photo.entity';
+import {PaginateQueryOptions} from '../../utils/paginated.schema';
+import {Paginate, Paginated, PaginateQuery} from 'nestjs-paginate';
+import {AuthGuard} from '@nestjs/passport';
 
 @ApiTags('Admin Post')
 @ApiBearerAuth()
@@ -55,15 +59,15 @@ export class AdminPostController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get all posts' })
-  @ApiQuery({
-    name: 'search',
-    type: String,
-    description: 'Search by post title and content',
-    required: false,
-  })
-  findAll(@Query('search') search?: string) {
-    return this.postService.findAll('id', search);
+  @ApiExtraModels(PostEntity)
+  // @ApiResponse({
+  //   status: 200,
+  //   schema: { ...paginatedSchema(Photo) },
+  // })
+  @PaginateQueryOptions(PostEntity)
+  @ApiOperation({ summary: 'Get all photos' })
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<PostEntity>> {
+    return this.postService.findAll(query);
   }
 
   @ApiOperation({ summary: 'Get post by ID' })
@@ -87,15 +91,15 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all posts' })
-  @ApiQuery({
-    name: 'search',
-    type: String,
-    description: 'Search by post title and content',
-    required: false,
-  })
-  findAll(@Query('search') search?: string) {
-    return this.postService.findAll('event_date', search);
+  @ApiExtraModels(PostEntity)
+  // @ApiResponse({
+  //   status: 200,
+  //   schema: { ...paginatedSchema(Photo) },
+  // })
+  @PaginateQueryOptions(PostEntity)
+  @ApiOperation({ summary: 'Get all photos' })
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<PostEntity>> {
+    return this.postService.findAll(query);
   }
 
   @ApiOperation({ summary: 'Get post by ID' })
