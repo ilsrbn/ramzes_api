@@ -79,7 +79,7 @@ export class AdminCategoryController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: "Edit Category by ID" })
   edit(@Body() body: EditCategoryDto, @Param('id') id: string, @User() ownerId: string) {
-    return this.categoryService.edit(+id, body, +ownerId)
+    return this.categoryService.edit(+id, body)
   }
 
   @Post('cover/:categoryId')

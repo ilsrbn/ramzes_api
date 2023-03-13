@@ -30,8 +30,8 @@ export class CategoryService {
     return category
   }
 
-  async edit(categoryId: number, body: EditCategoryDto, ownerId: number): Promise<Category> {
-    const category = await this.categoryRepository.findOneOrFail({ where: { id: categoryId, ownerId } })
+  async edit(categoryId: number, body: EditCategoryDto): Promise<Category> {
+    const category = await this.categoryRepository.findOneOrFail({ where: { id: categoryId } })
 
     if (body.title) category.title = body.title
     if (body.posted !== undefined) category.posted = body.posted
