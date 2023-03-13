@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePost } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
-import { EditPost } from './dto/update-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { isEmpty } from 'lodash';
 import {paginate, Paginated, PaginateQuery} from 'nestjs-paginate';
 import {Photo} from '../photo/entities/photo.entity';
@@ -23,11 +23,10 @@ export class PostService {
     return post;
   }
 
-  async edit(postId: number, editPost: EditPost): Promise<Post> {
-    const post = await this.postRepository.findOneOrFail({
+  async edit(postId: number, editPost: UpdatePostDto): Promise<Post> {
+    const post = await this.postRepository.findOne({
       where: {
         id: postId,
-        ownerId: editPost.userId,
       },
     });
 

@@ -52,9 +52,8 @@ export class AdminPostController {
   edit(
     @Param('id') id: string,
     @Body() editPostDto: UpdatePostDto,
-    @User() userId: number,
   ) {
-    return this.postService.edit(+id, { ...editPostDto, userId });
+    return this.postService.edit(+id, { ...editPostDto });
   }
 
   @Get()
